@@ -13,16 +13,22 @@ st.sidebar.header("設定參數")
 ticker_input = st.sidebar.text_input("輸入股票代號 (例如: 2330.TW 或 AAPL 蘋果)", value="2330.TW")
 days = st.sidebar.slider("回顧天數", 30, 365, 180)
 
-# --- 關鍵修正區塊 ---
+# --- 修正後的代號處理邏輯 ---
+# 為了避免 AttributeError: 'list' object has no attribute 'strip' 錯誤
+# 我們將處理步驟拆開來執行
 if not ticker_input:
-    ticker = "2330.TW"
+    ticker = "2330.TW" # 如果使用者沒輸入，使用預設值
 else:
-    # 修正說明：
-    # 1. split() 把 "AAPL (蘋果)" 切成 ['AAPL', '(蘋果)']
-    # 2.  取出第一個元素 'AAPL' (這才是文字)
-    # 3. strip().upper() 再進行去空白與轉大寫
-    ticker = ticker_input.split().strip().upper()
-# ------------------
+    # 步驟 1: 切割字串 (例如 "AAPL (蘋果)" -> ["AAPL", "(蘋果)"])
+    parts = ticker_input.split()
+    
+    # 步驟 2: 檢查切割後是否有內容
+    if len(parts) > 0:
+        # 步驟 3: 只取第一個元素 (即 "AAPL")，並轉為大寫
+        ticker = parts.strip().upper()
+    else:
+        ticker = "2330.TW"
+# ---------------------------
 
 # 核心功能：抓取資料
 def get_data(symbol, n_days):
@@ -37,6 +43,7 @@ def get_data(symbol, n_days):
             return None
             
         # 處理 yfinance 新版本回傳的多層索引 (MultiIndex) 格式
+        # 例如欄位變成 (Price, Ticker) -> Price
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.droplevel(1)
             
