@@ -1,0 +1,14 @@
+name: Daily Stock Check
+on:
+  schedule:
+    - cron: '30 21 * * *' # 每天台灣時間早上 05:30 (UTC 21:30) 執行
+  workflow_dispatch:      # 允許手動按按鈕執行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Say Hello
+        run: echo "System is alive and ready for trading day!"
