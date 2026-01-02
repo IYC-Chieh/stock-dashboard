@@ -17,12 +17,13 @@ days = st.sidebar.slider("回顧天數", 30, 365, 180)
 if not ticker_input:
     ticker = "2330.TW"
 else:
-    # 步驟 1: 切割字串 (例如 "AAPL (蘋果)" -> ['AAPL', '(蘋果)'])
+    # 步驟 1: 切割字串
     parts = ticker_input.split()
     
     # 步驟 2: 檢查切割後是否有內容
     if len(parts) > 0:
-        # 步驟 3: [修正] 加上  取出清單中的第一個元素，才能進行文字處理
+        # 步驟 3: ★★★ 關鍵修正 ★★★
+        # 必須加上  取出第一個元素，才能使用 strip()
         ticker = parts.strip().upper()
     else:
         ticker = "2330.TW"
