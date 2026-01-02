@@ -13,20 +13,20 @@ st.sidebar.header("設定參數")
 ticker_input = st.sidebar.text_input("輸入股票代號 (例如: 2330.TW 或 AAPL 蘋果)", value="2330.TW")
 days = st.sidebar.slider("回顧天數", 30, 365, 180)
 
-# --- 修正後的代號處理邏輯 ---
+# --- 關鍵修正區塊 ---
 if not ticker_input:
-    ticker = "2330.TW" # 如果使用者沒輸入，使用預設值
+    ticker = "2330.TW"
 else:
-    # 步驟 1: 切割字串 (例如 "AAPL (蘋果)" -> ["AAPL", "(蘋果)"])
+    # 步驟 1: 切割字串 (例如 "AAPL (蘋果)" -> ['AAPL', '(蘋果)'])
     parts = ticker_input.split()
     
     # 步驟 2: 檢查切割後是否有內容
     if len(parts) > 0:
-        # 步驟 3: [關鍵修正] 加上  取出清單中的第一個元素，才能進行文字處理
+        # 步驟 3: [修正] 加上  取出清單中的第一個元素，才能進行文字處理
         ticker = parts.strip().upper()
     else:
         ticker = "2330.TW"
-# ---------------------------
+# ------------------
 
 # 核心功能：抓取資料
 def get_data(symbol, n_days):
@@ -41,7 +41,6 @@ def get_data(symbol, n_days):
             return None
             
         # 處理 yfinance 新版本回傳的多層索引 (MultiIndex) 格式
-        # 例如欄位變成 (Price, Ticker) -> Price
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.droplevel(1)
             
