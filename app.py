@@ -23,7 +23,7 @@ else:
     # 步驟 2: 檢查切割後是否有內容
     if len(parts) > 0:
         # 步驟 3: ★★★ 關鍵修正 ★★★
-        # 必須加上  取出第一個元素，才能使用 strip()
+        # 加上  取出第一個元素，才能將 List 轉為 String
         ticker = parts.strip().upper()
     else:
         ticker = "2330.TW"
