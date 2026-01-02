@@ -14,8 +14,6 @@ ticker_input = st.sidebar.text_input("輸入股票代號 (例如: 2330.TW 或 AA
 days = st.sidebar.slider("回顧天數", 30, 365, 180)
 
 # --- 修正後的代號處理邏輯 ---
-# 為了避免 AttributeError: 'list' object has no attribute 'strip' 錯誤
-# 我們將處理步驟拆開來執行
 if not ticker_input:
     ticker = "2330.TW" # 如果使用者沒輸入，使用預設值
 else:
@@ -24,7 +22,7 @@ else:
     
     # 步驟 2: 檢查切割後是否有內容
     if len(parts) > 0:
-        # 步驟 3: 只取第一個元素 (即 "AAPL")，並轉為大寫
+        # 步驟 3: [關鍵修正] 取出清單中的第 0 個元素 (即 "AAPL")，再轉大寫
         ticker = parts.strip().upper()
     else:
         ticker = "2330.TW"
@@ -108,7 +106,7 @@ if df is not None and not df.empty:
         st.dataframe(df.sort_index(ascending=False))
         
 else:
-    st.error(f"找不到 {ticker} 的資料。請確認代號是否正確 (台股請加.TW，如 2330.TW)")
+    st.error(f"找不到 {ticker} 的資料。請確認代號是否正確 (例如台股 2330.TW, 美股 AAPL)")
 
 st.markdown("---")
 st.caption("資料來源：Yahoo Finance | 自動化更新系統")
